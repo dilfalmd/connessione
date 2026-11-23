@@ -1,0 +1,83 @@
+# Builds the Windows setup of Connessione, signs the update package and publishes
+# a GitHub Release with the NSIS setup and latest.json (read by the in-app updater).
+#
+# It starts by itself when a tag that begins with "v" is pushed (for example v0.2.0),
+# or by hand from the "Actions" tab. The tag must match the version in tauri.conf.json.
+#
+# Secrets to create in the repository (Settings -> Secrets and variables -> Actions):
+#   TAURI_SIGNING_PRIVATE_KEY           content of the updater private key file (connessione.key)
+#   TAURI_SIGNING_PRIVATE_KEY_PASSWORD  its password (the key has none: create the secret with an empty value)
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+# Write permission is needed to create the release and upload the files.
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build (Windows x64)
+    runs-on: windows-latest
+
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v7
+
+      - name: Check that the tag matches the app version
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: pwsh
+        run: |
+          $versione = (Get-Content src-tauri/tauri.conf.json -Raw | ConvertFrom-Json).version
+          if ($env:GITHUB_REF_NAME -ne "v$versione") {
+            throw "Tag $env:GITHUB_REF_NAME does not match tauri.conf.json version $versione"
+          }
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: 12
+
+      - name: Install Node 24
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install stable Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-msvc
+
+      - name: Cache Cargo
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: './src-tauri -> target'
+
+      - name: Install frontend dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build the app and create the release
+        uses: tauri-apps/tauri-action@v1.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        with:
+          tauriScript: pnpm tauri
+          # v__VERSION__ is replaced with the version in tauri.conf.json.
+          tagName: v__VERSION__
+          releaseName: 'Connessione v__VERSION__'
+          releaseBody: |
+            Download `Connessione_*_x64-setup.exe` below and run it (Windows 10/11, installs for the current user only).
+
+            The setup is not signed with a paid certificate: if Windows shows "Windows protected your PC", choose **More info** and then **Run anyway**.
+            See the README for requirements and privacy notes. Installed copies update themselves from here.
+          # The updater reads releases/latest/download/latest.json: a draft would not be "latest".
+          releaseDraft: false
+          prerelease: false
+          args: --bundles nsis

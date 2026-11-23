@@ -1,0 +1,24 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Capability for the main window",
+  "windows": [
+    "main"
+  ],
+  "permissions": [
+    "core:default",
+    "dialog:allow-save",
+    "dialog:allow-open",
+    {
+      "identifier": "opener:allow-open-url",
+      "allow": [
+        { "url": "https://www.speedtest.net/about/eula" },
+        { "url": "https://www.speedtest.net/about/terms" },
+        { "url": "https://www.speedtest.net/about/privacy" }
+      ]
+    },
+    "clipboard-manager:allow-write-text",
+    "updater:allow-check",
+    "updater:allow-download-and-install"
+  ]
+}

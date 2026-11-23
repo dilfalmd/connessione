@@ -1,0 +1,65 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Connessione",
+  "version": "0.2.0",
+  "identifier": "it.dilettafalcone.connessione",
+  "build": {
+    "beforeDevCommand": "pnpm dev",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "pnpm build",
+    "frontendDist": "../build"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "Connessione",
+        "width": 1100,
+        "height": 800,
+        "minWidth": 1000,
+        "minHeight": 720,
+        "visible": false
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src ipc: http://ipc.localhost; font-src 'self' data:"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "createUpdaterArtifacts": true,
+    "targets": [
+      "nsis"
+    ],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "category": "Utility",
+    "shortDescription": "Controllo della sicurezza della connessione/VPN e speedtest",
+    "longDescription": "Connessione unisce un controllo di sicurezza della connessione (VPN, perdite DNS e WebRTC, blacklist) e uno speedtest, con storico, grafici, monitoraggio in background e notifiche.",
+    "windows": {
+      "nsis": {
+        "installMode": "currentUser",
+        "languages": [
+          "Italian",
+          "English"
+        ],
+        "displayLanguageSelector": true
+      }
+    }
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDhDRjAxQUY3RUUxMzI5QkUKUldTK0tSUHU5eHJ3akkyMDVWSHhWMzFWYllwcEEzUzFicGFOZUxPWXBIeTZZR3BjNjQyTmxKQisK",
+      "endpoints": [
+        "https://github.com/dilfalmd/connessione/releases/latest/download/latest.json"
+      ],
+      "windows": {
+        "installMode": "passive"
+      }
+    }
+  }
+}

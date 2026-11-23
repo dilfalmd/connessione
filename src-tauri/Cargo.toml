@@ -1,0 +1,54 @@
+[package]
+name = "connessione"
+version = "0.2.0"
+description = "Connessione: controllo sicurezza della connessione e speedtest"
+authors = []
+edition = "2024"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+# The `_lib` suffix may seem redundant but it is necessary
+# to make the lib name unique and wouldn't conflict with the bin name.
+# This seems to be only an issue on Windows, see https://github.com/rust-lang/cargo/issues/8519
+name = "connessione_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = ["tray-icon", "image-png"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tokio = { version = "1.54.1", features = ["rt-multi-thread", "macros", "time", "net", "sync", "process", "io-util"] }
+chrono = { version = "0.4.45", default-features = false, features = ["clock", "std"] }
+indexmap = { version = "2.14.2", features = ["serde"] }
+windows = { version = "0.62.2", features = ["Foundation", "Networking_Connectivity", "Win32_Foundation", "Win32_NetworkManagement_IpHelper", "Win32_NetworkManagement_Ndis", "Win32_Networking_WinSock"] }
+getrandom = "0.4.3"
+reqwest = { version = "0.13.5", default-features = false, features = ["rustls", "json"] }
+webpki-root-certs = "1.0.12"
+rusqlite = { version = "0.43.0", features = ["bundled"] }
+uuid = { version = "1.29.3", features = ["v4"] }
+csv = "1.4.0"
+tauri-plugin-dialog = "2.8.4"
+tauri-plugin-clipboard-manager = "2.5.0"
+tauri-plugin-single-instance = "2.5.5"
+tauri-plugin-autostart = "2.7.0"
+tauri-winrt-notification = "0.8.1"
+tauri-plugin-opener = "2"
+sys-locale = "0.3.2"
+tauri-plugin-updater = "2.14.1"
+
+
+# Read the optimization guideline for more details: https://tauri.app/concept/size/#cargo-configuration
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = "s"
+strip = true
+# panic = "abort" volutamente assente: il codice si affida alla gestione dei panic dei task
+# (JoinError di tokio, Mutex avvelenati) per non far cadere l'app per un singolo controllo.
+
+[dev-dependencies]
+tempfile = "3.27.0"

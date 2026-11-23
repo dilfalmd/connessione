@@ -1,0 +1,105 @@
+/* Tema chiaro/scuro secondo il sistema. Tutti i colori sono variabili su :root. */
+:root {
+  color-scheme: light dark;
+
+  --sfondo: #f2f4f7;
+  --superficie: #ffffff;
+  --superficie-2: #f6f8fa;
+  --bordo: #dfe3e9;
+  --testo: #172033;
+  --testo-tenue: #5b6577;
+  --accento: #2563eb;
+  --accento-testo: #ffffff;
+  --ombra: 0 1px 2px rgb(16 24 40 / 0.06), 0 1px 3px rgb(16 24 40 / 0.04);
+
+  --ok: #15803d;
+  --ok-sfondo: #dcf5e4;
+  --avviso: #b45309;
+  --avviso-sfondo: #fdecc8;
+  --pericolo: #b91c1c;
+  --pericolo-sfondo: #fde0e0;
+  --neutro: #6b7280;
+  --neutro-sfondo: #e8ebf0;
+
+  --serie-download: #2563eb;
+  --serie-upload: #0d9488;
+  --serie-ping: #d97706;
+
+  --font: "Segoe UI Variable Text", "Segoe UI Variable", "Segoe UI", system-ui, sans-serif;
+  --raggio: 12px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --sfondo: #0f1319;
+    --superficie: #171c24;
+    --superficie-2: #1d2430;
+    --bordo: #2b3340;
+    --testo: #e6eaf0;
+    --testo-tenue: #98a2b3;
+    --accento: #5b8def;
+    --accento-testo: #0b1220;
+    --ombra: none;
+
+    --ok: #5fd68a;
+    --ok-sfondo: #12331f;
+    --avviso: #f4b942;
+    --avviso-sfondo: #3a2c0c;
+    --pericolo: #f87878;
+    --pericolo-sfondo: #3d1717;
+    --neutro: #98a2b3;
+    --neutro-sfondo: #262d38;
+
+    --serie-download: #6ea0ff;
+    --serie-upload: #2dd4bf;
+    --serie-ping: #fbbf24;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: var(--font);
+  font-size: 14px;
+  line-height: 1.45;
+  background: var(--sfondo);
+  color: var(--testo);
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accento);
+  outline-offset: 2px;
+}
+
+.num {
+  font-variant-numeric: tabular-nums;
+}
+
+.tenue {
+  color: var(--testo-tenue);
+}
